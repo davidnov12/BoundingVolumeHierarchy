@@ -19,8 +19,8 @@ namespace ge {
 			* _depth - maximum depth of BVH
 			* _binLength - length of bin (uses SAH division), default is 0.2
 			*/
-			SAH_AABB_BVH(ge::sg::TriangleIterator& _start,
-						 ge::sg::TriangleIterator& _end,
+			SAH_AABB_BVH(ge::sg::IndexedTriangleIterator& _start,
+						 ge::sg::IndexedTriangleIterator& _end,
 						 unsigned _depth,
 						 float _binLength = 0.2f);
 
@@ -35,8 +35,8 @@ namespace ge {
 			* _start - first primitive
 			* _end - last primitive
 			*/
-			void build(ge::sg::TriangleIterator& _start,
-					   ge::sg::TriangleIterator& _end);
+			void build(ge::sg::IndexedTriangleIterator& _start,
+					   ge::sg::IndexedTriangleIterator& _end);
 
 			/*
 			* Returns pointer to root node of BVH
@@ -57,31 +57,31 @@ namespace ge {
 			* axis - axis where is division performed
 			*/
 			void recursiveBuild(BVHNode& node,
-								ge::sg::TriangleIterator& start,
+								ge::sg::IndexedTriangleIterator& start,
 								unsigned currentDepth,
 								DivideAxis axis);
 
 			/*
 			* Searching for best divide position by SAH
 			* node - divided node
-			* start - position of first triangle
+			* start - position of first IndexedTriangle
 			* axis - axis where is division performed
 			*/
-			ge::sg::TriangleIterator divideBySAH(BVHNode& node,
-												 ge::sg::TriangleIterator& start,
+			ge::sg::IndexedTriangleIterator divideBySAH(BVHNode& node,
+												 ge::sg::IndexedTriangleIterator& start,
 												 DivideAxis axis);
 
 			/*
 			* Evaluation of SAH for certain divide position
 			* node - divided node
-			* start - first triangle
+			* start - first IndexedTriangle
 			* result - computed SAH
 			* criteria - divide position
 			* divSize - size of divided subpart
 			* axis - axis where is division performed
 			*/
-			ge::sg::TriangleIterator evaluateSAH(BVHNode& node,
-												 ge::sg::TriangleIterator& start,
+			ge::sg::IndexedTriangleIterator evaluateSAH(BVHNode& node,
+												 ge::sg::IndexedTriangleIterator& start,
 												 float& result,
 												 float criteria,
 												 float divSize,

@@ -22,6 +22,8 @@ namespace ge {
 		*/
 		class SAH_BVH {
 
+		friend class ge::sg::IndexedTriangleIterator;
+
 		public:
 
 			SAH_BVH() {  }
@@ -39,6 +41,7 @@ namespace ge {
 			// Common attributes
 			unsigned maxDepth;
 			float binLength;
+			bool firstPass = true;
 			std::vector<primitiveCenter> associatedCenters;
 
 		protected:
@@ -48,8 +51,8 @@ namespace ge {
 			 * _start - iterator to first primitive
 			 * _end - iterator to last primitive
 			 */
-			void computeCenters(ge::sg::TriangleIterator& _start,
-								ge::sg::TriangleIterator& _end);
+			void computeCenters(ge::sg::IndexedTriangleIterator& _start,
+								ge::sg::IndexedTriangleIterator& _end);
 
 
 			/*
@@ -59,10 +62,15 @@ namespace ge {
 			 * first - iterator to global first primitive
 			 * axis - axis used for sorting
 			 */
-			void sortCenters(ge::sg::TriangleIterator& _start,
-							 ge::sg::TriangleIterator& _end,
-							 ge::sg::TriangleIterator& first,
+			void sortCenters(ge::sg::IndexedTriangleIterator& _start,
+							 ge::sg::IndexedTriangleIterator& _end,
+							 ge::sg::IndexedTriangleIterator& first,
 							 DivideAxis axis);
+
+			void sortCentersIndexed(ge::sg::IndexedTriangleIterator& _start,
+									ge::sg::IndexedTriangleIterator& _end,
+									ge::sg::IndexedTriangleIterator& first,
+									DivideAxis axis);
 
 		private:
 
