@@ -24,7 +24,10 @@ namespace ge {
 						 unsigned _depth,
 						 float _binLength = 0.2f);
 
-			/* ...
+			/* 
+			* _geometry - geometry for BVH
+			* _depth - maximum depth of BVH
+			* _binLength - length of bin (uses SAH division), default is 0.2
 			*/
 			SAH_AABB_BVH(ge::sg::Mesh& _geometry,
 					     unsigned _depth,

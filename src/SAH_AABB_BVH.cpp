@@ -43,8 +43,7 @@ void ge::sg::SAH_AABB_BVH::recursiveBuild(BVHNode & node, ge::sg::IndexedTriangl
 
 	// Bounding Volume refit
 	glm::vec3 _min(std::numeric_limits<float>::max()), _max(std::numeric_limits<float>::min());
-	for (auto i = node.first; i <= node.last; ++i) {
-		//printf("%f %f %f\n", i->v0[0], i->v1[0], i->v2[0]);
+	for (auto i = node.first; i < node.last; ++i) {
 		_min.x = std::min(_min.x, std::min(i->v0[0], std::min(i->v1[0], i->v2[0])));
 		_min.y = std::min(_min.y, std::min(i->v0[1], std::min(i->v1[1], i->v2[1])));
 		_min.z = std::min(_min.z, std::min(i->v0[2], std::min(i->v1[2], i->v2[2])));
@@ -53,15 +52,9 @@ void ge::sg::SAH_AABB_BVH::recursiveBuild(BVHNode & node, ge::sg::IndexedTriangl
 		_max.y = std::max(_max.y, std::max(i->v0[1], std::max(i->v1[1], i->v2[1])));
 		_max.z = std::max(_max.z, std::max(i->v0[2], std::max(i->v1[2], i->v2[2])));
 	}
-	//printf("x\n");
+	
 	node.volume.min = _min;
 	node.volume.max = _max;
-	
-	/*printf("NODE\n");
-	printf("%u %u\n", node.first - start, node.last - start);
-	printf("%f %f %f\n", node.volume.min.x, node.volume.min.y, node.volume.min.z);
-	printf("%f %f %f\n", node.volume.max.x, node.volume.max.y, node.volume.max.z);*/
-	
 	
 	// Recursion end - max depth reached
 	if (currentDepth == 0) {
@@ -69,21 +62,20 @@ void ge::sg::SAH_AABB_BVH::recursiveBuild(BVHNode & node, ge::sg::IndexedTriangl
 	}
 
 	// Sort centers by one axis
-	/*if(node.first.getIndices() == nullptr)*/ sortCenters(node.first, node.last, start, axis);
-	//else sortCentersIndexed(node.first, node.last, start, axis);
-
+	if(node.first.getIndices() == nullptr)
+		sortCenters(node.first, node.last, start, axis);
+	else
+		sortCentersIndexed(node.first, node.last, start, axis);
+	
 	// Divide node
 	node.left = nullptr, node.right = nullptr;
 	ge::sg::IndexedTriangleIterator splitPosition;
 	splitPosition = divideBySAH(node, start, axis);
-	//if (splitPosition - start < 0) printf("error\n");
-	//if (splitPosition - start > 9) printf("error\n");
-	//printf("SPLIT %d\n", splitPosition - start);
-
+	
 	// Left child
 	if ((splitPosition - node.first) > 0) {
 		ge::sg::AABB bvol;
-		auto leftChild = std::make_shared<BVHNode>(bvol, node.first, splitPosition + (-1));
+		auto leftChild = std::make_shared<BVHNode>(bvol, node.first, splitPosition + (0));
 		node.left = leftChild;
 		recursiveBuild(*leftChild, start, currentDepth - 1, axis == DivideAxis::X_AXIS ? DivideAxis::Y_AXIS :
 															axis == DivideAxis::Y_AXIS ? DivideAxis::Z_AXIS :
@@ -125,8 +117,6 @@ ge::sg::IndexedTriangleIterator ge::sg::SAH_AABB_BVH::divideBySAH(BVHNode & node
 		}
 
 	}
-	//auto ptr = result->v0;
-	//ge::sg::IndexedTriangleIterator res(ptr, 3);
 
 	return result;
 
@@ -138,12 +128,11 @@ ge::sg::IndexedTriangleIterator ge::sg::SAH_AABB_BVH::evaluateSAH(BVHNode & node
 	unsigned last = (node.last - start);
 	unsigned total = (node.last - node.first) + 1;
 	unsigned cnt = 0;
-	//printf("sah %u %u %u\n", first, last, total);
+
 	// Evaluating SAH for concrete situation
 	for (auto it = first; it <= last; it++, cnt++) {
 
 		if (axis == DivideAxis::X_AXIS) {
-			//printf("x %f %f\n", associatedCenters[it].center.x, criteria);
 			if (associatedCenters[it].center.x > criteria) {
 				result = (divSize * cnt) + ((1.0f - divSize) * (total - cnt));
 				return (start + it);
@@ -151,7 +140,6 @@ ge::sg::IndexedTriangleIterator ge::sg::SAH_AABB_BVH::evaluateSAH(BVHNode & node
 		}
 
 		else if (axis == DivideAxis::Y_AXIS) {
-			//printf("y %f %f\n", associatedCenters[it].center.y, criteria);
 			if (associatedCenters[it].center.y > criteria) {
 				result = (divSize * cnt) + ((1.0f - divSize) * (total - cnt));
 				return (start + it);
@@ -159,7 +147,6 @@ ge::sg::IndexedTriangleIterator ge::sg::SAH_AABB_BVH::evaluateSAH(BVHNode & node
 		}
 
 		else if (axis == DivideAxis::Z_AXIS) {
-			//printf("z %f %f\n", associatedCenters[it].center.z, criteria);
 			if (associatedCenters[it].center.z > criteria) {
 				result = (divSize * cnt) + ((1.0f - divSize) * (total - cnt));
 				return (start + it);
@@ -167,7 +154,7 @@ ge::sg::IndexedTriangleIterator ge::sg::SAH_AABB_BVH::evaluateSAH(BVHNode & node
 		}
 
 	}
-	//printf("SAH COUNT %d\n", cnt);
+
 	result = (divSize * cnt) + ((1.0f - divSize) * (total - cnt));
 	return start + last;
 

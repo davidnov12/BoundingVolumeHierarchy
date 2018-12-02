@@ -22,8 +22,6 @@ namespace ge {
 		*/
 		class SAH_BVH {
 
-		friend class ge::sg::IndexedTriangleIterator;
-
 		public:
 
 			SAH_BVH() {  }
@@ -56,7 +54,7 @@ namespace ge {
 
 
 			/*
-			 * Sort of given geometry by primitives morton codes
+			 * Sort given geometry by primitives coordinaton
 			 * _start - iterator to first primitive
 			 * _end - iterator to last primitive
 			 * first - iterator to global first primitive
@@ -67,6 +65,14 @@ namespace ge {
 							 ge::sg::IndexedTriangleIterator& first,
 							 DivideAxis axis);
 
+
+			/*
+			 * Sort given geometry by primitives coordination
+			 * _start - iterator to first primitive
+			 * _end - iterator to last primitive
+			 * first - iterator to global first primitive
+			 * axis - axis used for sorting
+			 */
 			void sortCentersIndexed(ge::sg::IndexedTriangleIterator& _start,
 									ge::sg::IndexedTriangleIterator& _end,
 									ge::sg::IndexedTriangleIterator& first,
