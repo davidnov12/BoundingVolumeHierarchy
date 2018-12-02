@@ -14,26 +14,26 @@ namespace ge {
 			public:
 
 			BVH_Node(_bound_volume vol,
-				     ge::sg::TriangleIterator start,
-				     ge::sg::TriangleIterator end) : volume(vol), first(start), last(end) {
+				     ge::sg::IndexedTriangleIterator start,
+				     ge::sg::IndexedTriangleIterator end) : volume(vol), first(start), last(end) {
 			}
 
-			BVH_Node(ge::sg::TriangleIterator start,
-				ge::sg::TriangleIterator end) : first(start), last(end) {
+			BVH_Node(ge::sg::IndexedTriangleIterator start,
+				ge::sg::IndexedTriangleIterator end) : first(start), last(end) {
 			}
 
 			~BVH_Node() {  }
 
-			void setStartIterator(ge::sg::TriangleIterator start){
+			void setStartIterator(ge::sg::IndexedTriangleIterator start){
 				first = start;
 			}
 
-			void setEndIterator(ge::sg::TriangleIterator end) {
+			void setEndIterator(ge::sg::IndexedTriangleIterator end) {
 				last = end;
 			}
 
 			_bound_volume volume;							// Bounding Volume
-			ge::sg::TriangleIterator first, last;	// Primitives in node
+			ge::sg::IndexedTriangleIterator first, last;	// Primitives in node
 			std::shared_ptr<BVH_Node> left, right;			// Pointers to childs
 
 		protected:
