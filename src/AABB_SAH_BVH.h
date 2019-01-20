@@ -1,6 +1,6 @@
 #pragma once
 
-#include <BVHBuildPolicy.h>
+#include <BVH_Build_Policy.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -44,9 +44,9 @@ namespace ge {
 			* axis - axis where is division performed
 			*/
 			void recursiveBuild(BVHNode& node,
-								ge::sg::IndexedTriangleIterator& start,
-								unsigned currentDepth,
-								DivideAxis axis);
+                                ge::sg::IndexedTriangleIterator& start,
+                                unsigned currentDepth,
+                                DivideAxis axis);
 
 			/*
 			* Searching for best divide position by SAH
@@ -55,8 +55,8 @@ namespace ge {
 			* axis - axis where is division performed
 			*/
 			ge::sg::IndexedTriangleIterator divideBySAH(BVHNode& node,
-														ge::sg::IndexedTriangleIterator& start,
-														DivideAxis axis);
+                                                        ge::sg::IndexedTriangleIterator& start,
+                                                        DivideAxis axis);
 
 			/*
 			* Evaluation of SAH for certain divide position
@@ -68,11 +68,11 @@ namespace ge {
 			* axis - axis where is division performed
 			*/
 			ge::sg::IndexedTriangleIterator evaluateSAH(BVHNode& node,
-														ge::sg::IndexedTriangleIterator& start,
-														float& result,
-														float criteria,
-														float divSize,
-														DivideAxis axis);
+                                                        ge::sg::IndexedTriangleIterator& start,
+                                                        float& result,
+				                                        float criteria,
+				                                        float divSize,
+				                                        DivideAxis axis);
 
 
 		};
