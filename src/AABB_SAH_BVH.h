@@ -70,9 +70,9 @@ namespace ge {
 			ge::sg::IndexedTriangleIterator evaluateSAH(BVHNode& node,
                                                         ge::sg::IndexedTriangleIterator& start,
                                                         float& result,
-				                                        float criteria,
-				                                        float divSize,
-				                                        DivideAxis axis);
+                                                        float criteria,
+                                                        float divSize,
+                                                        DivideAxis axis);
 
 
 		};
