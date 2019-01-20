@@ -5,15 +5,16 @@
 #include <geSG/MeshPrimitiveIterator.h>
 #include <geSG/MeshTriangleIterators.h>
 #include <geSG/AABB.h>
+#include <geSG/BoundingSphere.h>
 
 namespace ge {
 	namespace sg {
 		
-			template <typename _bound_volume> class BVH_Node {
+			template <typename Bound_volume> class BVH_Node {
 
 			public:
 
-			BVH_Node(_bound_volume vol,
+			BVH_Node(Bound_volume vol,
 				     ge::sg::IndexedTriangleIterator start,
 				     ge::sg::IndexedTriangleIterator end) : volume(vol), first(start), last(end) {
 			}
@@ -32,7 +33,7 @@ namespace ge {
 				last = end;
 			}
 
-			_bound_volume volume;							// Bounding Volume
+			Bound_volume volume;							// Bounding Volume
 			ge::sg::IndexedTriangleIterator first, last;	// Primitives in node
 			std::shared_ptr<BVH_Node> left, right;			// Pointers to childs
 

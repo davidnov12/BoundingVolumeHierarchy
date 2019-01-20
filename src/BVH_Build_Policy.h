@@ -1,33 +1,26 @@
 #pragma once
-
+ 
 #include <geSG/MeshTriangleIterators.h>
 #include <geSG/MeshPrimitiveIterator.h>
 
-#include <iostream>
-#include <functional>
 #include <algorithm>
-#include <chrono>
-#include <valarray>
-
-#include <glm/glm.hpp>
-#include <glm/gtc/type_ptr.hpp>
-
-#include <BVH_Node.h>
+#include <vector>
 
 namespace ge {
 	namespace sg {
 
 		/*
-		* Implementation of common SAH BVH operations, declaring attributes
-		*/
-		class SAH_BVH {
+	 	 * Class with common attributes and functions for BVH build
+		 */
+		class BVHBuildPolicy {
 
-		public:
+		protected:
 
-			SAH_BVH() {  }
-
+			// Enumeration of dividing axises
 			idlist(DivideAxis, X_AXIS, Y_AXIS, Z_AXIS);
-			//idlist(SplitWay, OBJECT, SPATIAL);
+
+			// Build function
+			virtual void build();
 
 			// Centroids structure
 			typedef struct {
@@ -37,12 +30,39 @@ namespace ge {
 			} primitiveCenter;
 
 			// Common attributes
-			unsigned maxDepth;
-			float binLength;
+			unsigned maxDepth = 10;
+			unsigned dividePartitions = 5;
+			unsigned minVolumePrimitives = 10;
 			bool firstPass = true;
 			std::vector<primitiveCenter> associatedCenters;
+			ge::sg::IndexedTriangleIterator _firstPrimitive, _lastPrimitive;
 
-		protected:
+
+			/*
+			* _start - first primitive
+			* _end - last primitive
+			*/
+			void setGeometry(ge::sg::IndexedTriangleIterator& _start,
+				ge::sg::IndexedTriangleIterator& _end);
+
+
+			/*
+			* _geometry - geometry for BVH
+			*/
+			void setGeometry(ge::sg::Mesh& _geometry);
+
+
+			/*
+			* _depth - maximum depth of BVH
+			*/
+			void setMaxDepth(unsigned _depth);
+
+
+			/*
+			* _minNodePrimitives - minimum number of primitives in node
+			*/
+			void setMinNodePrimitives(unsigned _minNodePrimitives);
+
 
 			/*
 			 * Procomputation of primitive's centroids and its morton codes
@@ -50,7 +70,7 @@ namespace ge {
 			 * _end - iterator to last primitive
 			 */
 			void computeCenters(ge::sg::IndexedTriangleIterator& _start,
-								ge::sg::IndexedTriangleIterator& _end);
+				ge::sg::IndexedTriangleIterator& _end);
 
 
 			/*
@@ -61,9 +81,9 @@ namespace ge {
 			 * axis - axis used for sorting
 			 */
 			void sortCenters(ge::sg::IndexedTriangleIterator& _start,
-							 ge::sg::IndexedTriangleIterator& _end,
-							 ge::sg::IndexedTriangleIterator& first,
-							 DivideAxis axis);
+				ge::sg::IndexedTriangleIterator& _end,
+				ge::sg::IndexedTriangleIterator& first,
+				DivideAxis axis);
 
 
 			/*
@@ -74,11 +94,9 @@ namespace ge {
 			 * axis - axis used for sorting
 			 */
 			void sortCentersIndexed(ge::sg::IndexedTriangleIterator& _start,
-									ge::sg::IndexedTriangleIterator& _end,
-									ge::sg::IndexedTriangleIterator& first,
-									DivideAxis axis);
-
-		private:
+				ge::sg::IndexedTriangleIterator& _end,
+				ge::sg::IndexedTriangleIterator& first,
+				DivideAxis axis);
 
 		};
 
