@@ -1,6 +1,16 @@
+/*
+* RayTracing pro GPUEngine
+* Diplomova prace - master's thesis
+* Bc. David Novák
+* FIT VUT Brno
+* 2018/2019
+*
+* AABB_SAH_BVH.h
+*/
+
 #pragma once
 
-#include <BVH_Build_Policy.h>
+#include <GeneralCPUBVH.h>
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -9,15 +19,20 @@
 
 #include <BVH_Node.h>
 
+#include <limits>
+#include <chrono>
+
+//#define CPU_BVH_MEASURE
+
 namespace ge {
 	namespace sg {
 
 		/*
 		* BVH structure using SAH building with AABB bounding volumes
 		*/
-		class AABB_SAH_BVH : private BVHBuildPolicy {
+		class AABB_SAH_BVH : public GeneralCPUBVH {
 
-		protected:
+		public:
 			
 			// AABB node
 			using BVHNode = ge::sg::BVH_Node<ge::sg::AABB>;
@@ -29,6 +44,11 @@ namespace ge {
 
 
 			/*
+			* Set number of dividing partitions
+			*/
+			void setSplitPartitions(unsigned numberOfParts);
+
+			/*
 			* Returns pointer to root node of BVH
 			*/
 			std::shared_ptr<BVHNode> getRoot();
@@ -36,6 +56,13 @@ namespace ge {
 
 			// Root node of BVH
 			std::shared_ptr<BVHNode> rootNode;
+
+			// number of candidate split planes
+			unsigned nrOfPartitions = 10;
+
+#ifdef CPU_BVH_MEASURE
+			double sort, divide, minBB;
+#endif
 
 			/*
 			* Function, which recursively builds BVH structure
@@ -71,7 +98,7 @@ namespace ge {
                                                         ge::sg::IndexedTriangleIterator& start,
                                                         float& result,
                                                         float criteria,
-                                                        float divSize,
+                                                        float divSize, float boxSize,
                                                         DivideAxis axis);
 
 
